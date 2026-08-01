@@ -1,0 +1,6 @@
+syntax: glob
+.vs/*
+WindowsCpuBar/bin/*
+WindowsCpuBar/obj/*
+desktop.ini
+.git/*
