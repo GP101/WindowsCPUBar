@@ -36,6 +36,8 @@ internal sealed class MainForm : Form
     private string _restoredTitle = DefaultTitle;
     private bool _isUpdatingUi;
     private bool _isActiveCaption = true;
+    private DateTime _lastTaskbarIconUpdate = DateTime.MinValue;
+    private static readonly TimeSpan TaskbarIconUpdateInterval = TimeSpan.FromSeconds(2);
 
     public MainForm()
     {
@@ -438,7 +440,6 @@ internal sealed class MainForm : Form
             _historyPanel.Invalidate();
             _gpuHistoryPanel.Invalidate();
             InvalidateTitleBar();
-            UpdateTaskbarHistory();
         }
         finally
         {
@@ -602,11 +603,17 @@ internal sealed class MainForm : Form
 
         if (WindowState == FormWindowState.Minimized)
         {
-            TaskbarHistoryIcon.Apply(Handle, _history, _settings.BarColor);
+            var now = DateTime.UtcNow;
+            if (now - _lastTaskbarIconUpdate >= TaskbarIconUpdateInterval)
+            {
+                TaskbarHistoryIcon.Apply(Handle, _history, _settings.BarColor);
+                _lastTaskbarIconUpdate = now;
+            }
         }
         else
         {
             TaskbarHistoryIcon.Restore(Handle);
+            _lastTaskbarIconUpdate = DateTime.MinValue;
         }
     }
 
@@ -638,7 +645,7 @@ internal sealed class MainForm : Form
             Handle,
             IntPtr.Zero,
             IntPtr.Zero,
-            NativeMethods.RdwInvalidate | NativeMethods.RdwFrame | NativeMethods.RdwUpdatedNow);
+            NativeMethods.RdwInvalidate | NativeMethods.RdwFrame);
     }
 
     private void TryDrawTitleBarCpu()

@@ -16,7 +16,6 @@ internal static class NativeMethods
 
     public const uint RdwInvalidate = 0x0001;
     public const uint RdwFrame = 0x0400;
-    public const uint RdwUpdatedNow = 0x0100;
 
     [DllImport("user32.dll")]
     public static extern IntPtr GetWindowDC(IntPtr hWnd);
