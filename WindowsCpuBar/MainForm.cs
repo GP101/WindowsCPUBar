@@ -4,7 +4,7 @@ namespace WindowsCpuBar;
 
 internal sealed class MainForm : Form
 {
-    private const string DefaultTitle = "Windows CPU Bar";
+    private static readonly string DefaultTitle = $"Windows CPU Bar v{AppVersion.Current}";
     private const int TitleBarDrawWidth = 140;
 
     private readonly CpuMonitor _cpuMonitor = new();
